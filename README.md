@@ -15,7 +15,7 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS and Motion.
 | --- | --- |
 | Project scaffold | ✅ |
 | Flow view | ✅ |
-| Placement stage | 🚧 planned |
+| Placement stage | ✅ |
 | Ask panel (mock mode) | 🚧 planned |
 | Feedback log | 🚧 planned |
 | Floorplanning & Routing stages | 🚧 planned |
@@ -55,10 +55,27 @@ answering questions about this topic.
 
 ## Edit stage text
 
-All stage names, taglines and which stages are clickable live in
-`content/stages.ts`. It's plain data, so you can edit it without touching
-any components. Set `active: true` on a stage to make it clickable once it
-has a stage view.
+All stage text lives in `content/stages.ts`. It's plain data, so you can
+edit it without touching any components. Each stage has:
+
+- `name`, `title`, `tagline`: shown in the flow view and stage header
+- `active`: whether the stage is clickable
+- `content`: the stage view text
+  - `summary`: one or two sentences shown above inputs and outputs
+  - `inputs`, `outputs`, `pitfalls`, `metrics`: lists of `{ label, detail }`
+  - `phases`: captions for each step of the animation, in order
+
+## Stage visuals
+
+Visuals are illustrative, not physically exact. Each one is an SVG driven
+by a seeded generator, so the same layout renders every time.
+
+- **Placement**: cells go from a central clump, through global placement
+  (spread out, overlapping), to legalized rows, then optimization (buffers
+  inserted, cells upsized). Toggle **Nets** for flylines and **Congestion**
+  for a heatmap that combines cell density with a RUDY-style wire-demand
+  estimate. The stats strip (overlaps, HPWL, peak density, utilization) is
+  computed from the cell positions at each step.
 
 ## Add your CreateAI token
 
