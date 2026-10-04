@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Tailwind v4 turns these into utilities,
+ * e.g. --color-panel → bg-panel, --color-accent → text-accent.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  /* Surfaces */
+  --color-bg: #07090d;
+  --color-panel: #0d1117;
+  --color-panel-2: #121821;
+  --color-line: #1d2633;
+  --color-line-strong: #2a3647;
+
+  /* Text */
+  --color-fg: #e6edf3;
+  --color-muted: #8b98a9;
+  --color-dim: #5a6778;
+
+  /* Accents */
+  --color-accent: #22d3ee;      /* cyan: primary, active */
+  --color-accent-2: #a78bfa;    /* violet: secondary */
+  --color-ok: #34d399;
+  --color-warn: #fbbf24;
+  --color-bad: #f87171;
+
+  /* Metal layer palette (routing / power) */
+  --color-m1: #60a5fa;
+  --color-m2: #f472b6;
+  --color-m3: #34d399;
+  --color-m4: #fbbf24;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Faint engineering-grid backdrop used behind visuals and the flow view. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+::selection {
+  background: rgb(34 211 238 / 0.3);
+}
