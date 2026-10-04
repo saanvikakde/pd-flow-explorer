@@ -58,6 +58,32 @@ body {
   background-size: 32px 32px;
 }
 
+/* Pulse travelling along the flow-view track (large screens). */
+.flow-pulse {
+  top: 0;
+  height: 100%;
+  width: 18%;
+  animation: flow-pulse-x 3.2s linear infinite;
+}
+@keyframes flow-pulse-x {
+  from { left: -18%; }
+  to { left: 100%; }
+}
+
+/* Entrance animation that works without JS. Set animation-delay inline to stagger. */
+.fade-up {
+  animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-pulse { animation: none; opacity: 0; }
+  .fade-up { animation: none; }
+}
+
 ::selection {
   background: rgb(34 211 238 / 0.3);
 }
