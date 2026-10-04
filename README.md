@@ -31,7 +31,9 @@ npm install        # first time only
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Then open http://localhost:3001. The port is pinned to 3001 in
+`package.json` (port 3000 is often taken by Docker or other dev servers).
+To use a different one: `npm run dev -- -p 4000`.
 
 ## Add a skill
 
