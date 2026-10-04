@@ -14,7 +14,7 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS and Motion.
 | Feature | Status |
 | --- | --- |
 | Project scaffold | ✅ |
-| Flow view | 🚧 planned |
+| Flow view | ✅ |
 | Placement stage | 🚧 planned |
 | Ask panel (mock mode) | 🚧 planned |
 | Feedback log | 🚧 planned |
@@ -52,6 +52,13 @@ answering questions about this topic.
 - `description` will be used by a future skill router to pick the right skill.
 - A stage uses the skill whose folder name matches the stage id
   (`floorplanning`, `placement`, `routing`).
+
+## Edit stage text
+
+All stage names, taglines and which stages are clickable live in
+`content/stages.ts`. It's plain data, so you can edit it without touching
+any components. Set `active: true` on a stage to make it clickable once it
+has a stage view.
 
 ## Add your CreateAI token
 
