@@ -17,7 +17,7 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS and Motion.
 | Flow view | ✅ |
 | Placement stage | ✅ |
 | Ask panel (mock + CreateAI) | ✅ |
-| Feedback log | 🚧 planned |
+| Feedback log | ✅ |
 | Floorplanning & Routing stages | 🚧 planned |
 
 ## Run it
@@ -101,6 +101,28 @@ The header shows which skill the stage uses (green: ready, amber: empty or
 invalid, red: missing) and whether you're in **mock** or **CreateAI** mode.
 Each answer shows the skill it used.
 
+## Feedback log
+
+Under each answer, **⚑ This answer was confusing/wrong** opens a small form:
+pick *Confusing* or *Wrong*, optionally add a note, and click **Log
+feedback**. Each entry is appended as one JSON line to
+`feedback/log.jsonl` (gitignored, local only):
+
+```json
+{"timestamp":"…","skill":"placement","stageId":"placement","reason":"wrong","note":"…","question":"…","answer":"…","mode":"live","askedAt":"…"}
+```
+
+To review it:
+
+```bash
+npm run feedback              # counts per skill + 10 most recent
+npm run feedback -- 25        # 25 most recent
+npm run feedback -- routing   # one skill only
+```
+
+The log is written to local disk, so it works with `npm run dev` or
+`npm start` on your machine (not on hosts with read-only file systems).
+
 ## Add your CreateAI token
 
 The token goes in `.env` in the project root. **Not** `.env.example`,
@@ -126,6 +148,7 @@ app/          pages and API routes
 components/   UI: flow view, stage visuals, Ask panel
 content/      stage explanation text (edit freely)
 lib/          skills loader, prompt assembly, model client, feedback log
+scripts/      npm run feedback (log summary)
 skills/       your SKILL.md files
 feedback/     log.jsonl from the "confusing/wrong" button (gitignored)
 ```
