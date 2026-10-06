@@ -79,7 +79,44 @@ body {
   to { opacity: 1; transform: none; }
 }
 
+/* Loading placeholder bars. */
+.shimmer {
+  background: linear-gradient(90deg, var(--color-panel-2) 0%, var(--color-line-strong) 50%, var(--color-panel-2) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+
+/* Rendered markdown in Ask answers. */
+.md { font-size: 0.875rem; line-height: 1.65; color: rgb(230 237 243 / 0.92); overflow-wrap: anywhere; }
+.md > * + * { margin-top: 0.75em; }
+.md h1, .md h2, .md h3, .md h4 { color: var(--color-fg); font-weight: 600; letter-spacing: -0.01em; margin-top: 1.25em; }
+.md h1 { font-size: 1.15rem; }
+.md h2 { font-size: 1.05rem; }
+.md h3, .md h4 { font-size: 0.95rem; }
+.md > :first-child { margin-top: 0; }
+.md strong { color: var(--color-fg); font-weight: 600; }
+.md a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
+.md ul, .md ol { padding-left: 1.25rem; }
+.md ul { list-style: disc; }
+.md ol { list-style: decimal; }
+.md li + li { margin-top: 0.3em; }
+.md li::marker { color: var(--color-dim); }
+.md blockquote { border-left: 2px solid var(--color-accent-2); padding-left: 0.85rem; color: var(--color-muted); }
+.md hr { border-color: var(--color-line); }
+.md code { font-family: var(--font-mono); font-size: 0.8em; background: var(--color-panel-2); border: 1px solid var(--color-line); border-radius: 4px; padding: 0.1em 0.35em; }
+.md pre { background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 8px; padding: 0.85rem 1rem; overflow: auto; max-height: 420px; }
+.md pre code { background: none; border: 0; padding: 0; font-size: 0.75rem; line-height: 1.6; white-space: pre; color: var(--color-muted); }
+.md-table { overflow-x: auto; }
+.md table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+.md th, .md td { border: 1px solid var(--color-line); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+.md th { background: var(--color-panel-2); color: var(--color-fg); font-weight: 600; }
+
 @media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; }
   .flow-pulse { animation: none; opacity: 0; }
   .fade-up { animation: none; }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AskPanel } from "@/components/ask/AskPanel";
 import { StageContentPanel } from "@/components/stage/StageContentPanel";
 import { StageVisual } from "@/components/visuals/StageVisual";
 import { getStage, stages } from "@/content/stages";
@@ -65,6 +66,10 @@ export default async function StagePage({ params }: Props) {
         <aside className="lg:col-span-5">
           <StageContentPanel content={stage.content} />
         </aside>
+      </div>
+
+      <div className="mt-6">
+        <AskPanel stageId={stage.id} stageTitle={stage.title} suggestions={stage.content?.suggestedQuestions} />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS and Motion.
 | Project scaffold | ✅ |
 | Flow view | ✅ |
 | Placement stage | ✅ |
-| Ask panel (mock mode) | 🚧 planned |
+| Ask panel (mock + CreateAI) | ✅ |
 | Feedback log | 🚧 planned |
 | Floorplanning & Routing stages | 🚧 planned |
 
@@ -54,6 +54,11 @@ answering questions about this topic.
 - `description` will be used by a future skill router to pick the right skill.
 - A stage uses the skill whose folder name matches the stage id
   (`floorplanning`, `placement`, `routing`).
+- HTML comments (`<!-- TODO -->`) are stripped before the skill is sent.
+  A SKILL.md with only frontmatter and comments counts as **empty**: the Ask
+  panel says so instead of calling the model.
+- In dev mode, skill edits are picked up on the next question (no restart).
+  The terminal lists the discovered skills when the server starts.
 
 ## Edit stage text
 
@@ -79,20 +84,40 @@ by a seeded generator, so the same layout renders every time.
   estimate. The stats strip (overlaps, HPWL, peak density, utilization) is
   computed from the cell positions at each step.
 
+## Ask panel
+
+Every stage view has an Ask panel. When you ask a question:
+
+1. `lib/skills.ts` finds the skills in `skills/`.
+2. `lib/skill-selector.ts` picks one. Today: the current stage's skill.
+   To add a router, write a new selector there (e.g. match the question
+   against each skill's `description`) and point `selectSkill` at it.
+3. `lib/prompt.ts` combines the skill body and your question with
+   `BEGIN SKILL` / `BEGIN QUESTION` separators. Edit the wording there.
+4. `lib/model.ts` sends it to CreateAI (30 s timeout) or, with no token,
+   returns a mock answer. It's the only file that talks to a model.
+
+The header shows which skill the stage uses (green: ready, amber: empty or
+invalid, red: missing) and whether you're in **mock** or **CreateAI** mode.
+Each answer shows the skill it used.
+
 ## Add your CreateAI token
 
-The token is read only on the server and never sent to the browser.
+The token goes in `.env` in the project root. **Not** `.env.example`,
+which is committed to git.
 
 ```bash
 cp .env.example .env
-open -e .env        # paste your token after CREATEAI_TOKEN=
+open -e .env        # put your token right after CREATEAI_TOKEN=
 ```
 
-Restart `npm run dev` after editing `.env`. Without a token, the app runs in
-**mock mode**: answers show which skill was used and the full query that
-would have been sent.
+Restart `npm run dev` after editing `.env`. The terminal prints
+`[model] mode: CreateAI (token set)` when it's picked up. Without a token,
+the app runs in **mock mode**: answers show which skill was used and the
+full query that would have been sent.
 
-`.env` is gitignored. Never commit it.
+The token is read only on the server (`lib/model.ts` is `server-only`) and
+never sent to the browser. `.env` is gitignored. Never commit it.
 
 ## Project layout
 
