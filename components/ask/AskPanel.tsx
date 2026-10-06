@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MAX_QUESTION_CHARS, type AskResponse, type AskStatus } from "@/lib/ask-types";
 import { AnswerCard, ModeTag, type Entry } from "./AnswerCard";
+import { FeedbackButton } from "./FeedbackButton";
 
 const CLIENT_TIMEOUT_MS = 35_000; // a bit longer than the server's 30s model timeout
 
@@ -104,7 +105,12 @@ export function AskPanel({
       {entries.length > 0 && (
         <div className="max-h-[640px] space-y-6 overflow-y-auto px-5 py-5">
           {entries.map((e) => (
-            <AnswerCard key={e.id} entry={e} onRetry={ask} />
+            <AnswerCard
+              key={e.id}
+              entry={e}
+              onRetry={ask}
+              footerExtra={e.state === "answered" ? <FeedbackButton entry={e} stageId={stageId} /> : undefined}
+            />
           ))}
           <div ref={endRef} />
         </div>
