@@ -1,0 +1,5 @@
+Cover at least: inputs and outputs of placement; global placement (quadratic/analytic and density-based approaches, conceptually); legalization; detailed placement; timing-driven and congestion-driven placement; utilization and placement density; HPWL as a wirelength estimate; congestion estimation (GCells, overflow, RUDY-style estimates); placement blockages (hard, soft, partial) and macro halos; cell padding; pre-CTS optimization (buffering, gate sizing, fixing max transition/capacitance/fanout); scan chain reordering; how placement quality affects CTS and routing.
+
+Scope: include timing-driven placement, pre-CTS buffering and gate sizing. Leave clock tree construction to CTS, macro placement and power grid design to floorplanning, and wire routing to routing.
+
+App context: the student sees an animated layout view with four steps (Initial: cells clumped in the center; Global placement: spread out but overlapping; Legalization: snapped into rows; Optimization: buffers inserted and cells upsized), a congestion heatmap toggle, a nets (flylines) toggle, and live stats for overlaps, HPWL, peak density and utilization.
