@@ -18,6 +18,7 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS and Motion.
 | Placement stage | ✅ |
 | Ask panel (mock + CreateAI) | ✅ |
 | Feedback log | ✅ |
+| Skill writer (CreateAI drafts + revisions) | ✅ |
 | Floorplanning & Routing stages | 🚧 planned |
 
 ## Run it
@@ -59,6 +60,39 @@ answering questions about this topic.
   panel says so instead of calling the model.
 - In dev mode, skill edits are picked up on the next question (no restart).
   The terminal lists the discovered skills when the server starts.
+
+## Write skills with CreateAI
+
+You don't have to write skills by hand. `npm run skill` has CreateAI draft
+and revise them (needs `CREATEAI_TOKEN` in `.env`):
+
+```bash
+npm run skill -- list                 # status, drafts, feedback count per skill
+npm run skill -- write floorplanning  # draft one skill
+npm run skill -- write all            # draft every empty or missing skill
+npm run skill -- revise placement     # rewrite using feedback/log.jsonl
+npm run skill -- apply floorplanning  # make the draft the live SKILL.md
+```
+
+- Drafts are saved as `skills/<id>/SKILL.draft.md`. The app ignores them
+  until you `apply`, so you can read them first. Drafts are gitignored.
+- `apply` validates the draft, keeps the old SKILL.md as `SKILL.prev.md`
+  (also gitignored), then replaces it. Commit the new SKILL.md when happy.
+- `revise` sends the current skill plus the 20 most recent feedback
+  entries for it, and prints a list of what changed. Compare with
+  `code --diff skills/<id>/SKILL.md skills/<id>/SKILL.draft.md`.
+- Add `--dry-run` to print the prompt without calling CreateAI.
+- If CreateAI replies with clarifying questions instead of a file, the
+  script retries once, telling it to use its best judgment.
+
+The prompts are plain files you can edit:
+
+- `prompts/write-skill.md`: the template for new skills
+- `prompts/revise-skill.md`: the template for revisions
+- `prompts/topics/<id>.md`: what each skill should cover, its scope, and
+  what the student sees in the app. To create a brand-new skill, add a
+  topics file and run `write <id>` (use `--title "Name"` if it isn't a
+  stage). Without a topics file, CreateAI picks the topics itself.
 
 ## Edit stage text
 
@@ -148,7 +182,8 @@ app/          pages and API routes
 components/   UI: flow view, stage visuals, Ask panel
 content/      stage explanation text (edit freely)
 lib/          skills loader, prompt assembly, model client, feedback log
-scripts/      npm run feedback (log summary)
+prompts/      prompts the skill writer sends to CreateAI (edit freely)
+scripts/      npm run feedback (log summary), npm run skill (skill writer)
 skills/       your SKILL.md files
 feedback/     log.jsonl from the "confusing/wrong" button (gitignored)
 ```
