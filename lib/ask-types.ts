@@ -34,3 +34,32 @@ export interface AskStatus {
 }
 
 export const MAX_QUESTION_CHARS = 2000;
+
+/** Why an answer was flagged. */
+export type FeedbackReason = "confusing" | "wrong";
+
+/** What the Ask panel sends to POST /api/feedback. */
+export interface FeedbackRequest {
+  question: string;
+  answer: string;
+  /** Skill folder id, e.g. "placement". */
+  skill: string;
+  stageId?: string;
+  mode: ModelMode;
+  /** When the answer was produced (ISO time). */
+  askedAt: string;
+  reason: FeedbackReason;
+  note?: string;
+}
+
+/** One line of feedback/log.jsonl. */
+export interface FeedbackEntry extends FeedbackRequest {
+  /** When the feedback was logged (ISO time). */
+  timestamp: string;
+  /** Frontmatter name of the skill at the time, if it differs from the folder. */
+  skillName?: string;
+}
+
+export type FeedbackResponse = { ok: true } | { ok: false; message: string };
+
+export const MAX_FEEDBACK_NOTE_CHARS = 1000;
