@@ -14,7 +14,7 @@ import type { ModelMode } from "./ask-types";
  */
 
 const DEFAULT_URL = "https://api-main.aiml.asu.edu/query";
-const TIMEOUT_MS = 30_000;
+const DEFAULT_TIMEOUT_MS = 30_000;
 
 export interface ModelAnswer {
   text: string;
@@ -39,12 +39,21 @@ export function modelMode(): ModelMode {
   return token() ? "live" : "mock";
 }
 
-export async function askModel(query: string, info: { skillName: string; skillFile: string }): Promise<ModelAnswer> {
-  if (modelMode() === "mock") return mockAnswer(query, info);
-  return { text: await callCreateAI(query), mode: "live" };
+export interface AskOptions {
+  /** Defaults to 30s (the Ask panel). Long generations, like writing a skill, pass more. */
+  timeoutMs?: number;
 }
 
-async function callCreateAI(query: string): Promise<string> {
+export async function askModel(
+  query: string,
+  info: { skillName: string; skillFile: string },
+  { timeoutMs = DEFAULT_TIMEOUT_MS }: AskOptions = {},
+): Promise<ModelAnswer> {
+  if (modelMode() === "mock") return mockAnswer(query, info);
+  return { text: await callCreateAI(query, timeoutMs), mode: "live" };
+}
+
+async function callCreateAI(query: string, timeoutMs: number): Promise<string> {
   const url = process.env.CREATEAI_URL?.trim() || DEFAULT_URL;
 
   let res: Response;
@@ -53,15 +62,17 @@ async function callCreateAI(query: string): Promise<string> {
       method: "POST",
       headers: { Authorization: `Bearer ${token()}`, "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+      signal: AbortSignal.timeout(timeoutMs),
       cache: "no-store",
     });
   } catch (err) {
     const name = err instanceof Error ? err.name : "";
     if (name === "TimeoutError" || name === "AbortError") {
-      throw new ModelError("The model didn't answer within 30 seconds. Try again, or ask a shorter question.", 504);
+      const secs = Math.round(timeoutMs / 1000);
+      throw new ModelError(`The model didn't answer within ${secs} seconds. Try again, or ask a shorter question.`, 504);
     }
-    console.error("[model] network error:", err instanceof Error ? err.message : err);
+    const cause = err instanceof Error && err.cause instanceof Error ? ` (${(err.cause as { code?: string }).code ?? err.cause.message})` : "";
+    console.error(`\n[model] network error: ${err instanceof Error ? err.message : err}${cause}`);
     throw new ModelError("Couldn't reach the CreateAI API. Check your internet connection (and VPN, if you need one).");
   }
 
