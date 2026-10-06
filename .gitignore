@@ -6,6 +6,10 @@
 # --- Local feedback log (personal data, stays on this machine) ---
 feedback/log.jsonl
 
+# --- Skill writer drafts and backups (apply a draft to make it SKILL.md) ---
+skills/**/SKILL.draft.md
+skills/**/SKILL.prev.md
+
 # --- Dependencies ---
 node_modules/
 
