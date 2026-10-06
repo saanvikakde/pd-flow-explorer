@@ -34,6 +34,8 @@ export interface StageContent {
   metrics: Item[];
   /** Captions for each step of the animation, in order. */
   phases: Item[];
+  /** Starter questions shown in the Ask panel before the first question. */
+  suggestedQuestions?: string[];
 }
 
 export interface Stage {
@@ -114,6 +116,11 @@ export const stages: Stage[] = [
         { label: "Global placement", detail: "Cells spread out to reduce density while keeping connected cells close. Positions are rough and cells still overlap." },
         { label: "Legalization", detail: "Each cell snaps to a legal site in a row. Overlaps go to zero; detailed placement then makes small local improvements." },
         { label: "Optimization", detail: "Buffers are inserted into gaps and some cells are upsized to fix timing and electrical violations." },
+      ],
+      suggestedQuestions: [
+        "What's the difference between global and detailed placement?",
+        "Why does high utilization cause routing congestion?",
+        "How does timing-driven placement work?",
       ],
     },
   },
