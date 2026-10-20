@@ -143,8 +143,15 @@ feedback**. Each entry is appended as one JSON line to
 `feedback/log.jsonl` (gitignored, local only):
 
 ```json
-{"timestamp":"…","skill":"placement","stageId":"placement","reason":"wrong","note":"…","question":"…","answer":"…","mode":"live","askedAt":"…"}
+{"id":"FB-012","timestamp":"…","skill":"placement","stageId":"placement","reason":"wrong","note":"…","question":"…","answer":"…","mode":"live","askedAt":"…"}
 ```
+
+Each entry gets a stable `id` (`FB-001`, `FB-002`, …) that skill files can
+cite. The id, timestamp, skill and reason (no question, answer or note) are
+also appended to `feedback/index.jsonl`, which **is** committed so CI can
+check citations without the private log. Entries logged before ids existed
+can be given one with `npm run feedback:ids` (backs up the log first, safe
+to re-run; it also rebuilds the index).
 
 To review it:
 
@@ -156,6 +163,35 @@ npm run feedback -- routing   # one skill only
 
 The log is written to local disk, so it works with `npm run dev` or
 `npm start` on your machine (not on hosts with read-only file systems).
+
+## Check skills
+
+`scripts/check_skills.py` runs three mechanical checks on every
+`skills/*/SKILL.md` (Python 3, no dependencies):
+
+1. **Source check:** every citation like `[FB-012]` or `[FB-012, FB-019]`
+   matches an entry in `feedback/log.jsonl` or `feedback/index.jsonl`.
+2. **Claim citation:** every bullet or paragraph with strong wording
+   (*never, always, do not, must, only*) cites at least one entry.
+3. **Ambiguity:** no hedging words (*likely, maybe, might, probably,
+   possibly, untested, may*).
+
+```bash
+npm run check:skills                                  # all skills
+python3 scripts/check_skills.py skills/routing/SKILL.md  # one file
+npm run test:check-skills                             # the checker's own tests
+```
+
+The report shows PASS/FAIL per check with `file:line`, the matched words
+and the line text. It exits with 1 if anything fails (2 for usage errors),
+so it can run in CI or a pre-commit hook.
+
+- Edit the word lists at the top of the script.
+- Frontmatter, fenced code blocks, inline `code` and `<!-- comments -->`
+  are ignored. Hyphenated words (*read-only*) don't count.
+- A citation anywhere in a bullet (including its wrapped lines) or
+  paragraph covers every strong word in it.
+- Find ids to cite with `npm run feedback` (each entry shows its id).
 
 ## Add your CreateAI token
 
@@ -183,7 +219,9 @@ components/   UI: flow view, stage visuals, Ask panel
 content/      stage explanation text (edit freely)
 lib/          skills loader, prompt assembly, model client, feedback log
 prompts/      prompts the skill writer sends to CreateAI (edit freely)
-scripts/      npm run feedback (log summary), npm run skill (skill writer)
+scripts/      npm run feedback (log summary), npm run skill (skill writer),
+              check_skills.py (skill citation/wording checks) + tests/
 skills/       your SKILL.md files
-feedback/     log.jsonl from the "confusing/wrong" button (gitignored)
+feedback/     log.jsonl from the "confusing/wrong" button (gitignored),
+              index.jsonl of feedback ids (committed)
 ```

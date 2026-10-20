@@ -12,6 +12,9 @@
     "start": "next start -p 3001",
     "typecheck": "tsc --noEmit",
     "feedback": "node scripts/feedback-summary.mjs",
+    "feedback:ids": "node scripts/feedback-ids.mjs",
+    "check:skills": "python3 scripts/check_skills.py",
+    "test:check-skills": "python3 -m unittest discover -s scripts/tests",
     "skill": "node --conditions=react-server --import tsx scripts/skill.ts"
   },
   "dependencies": {
