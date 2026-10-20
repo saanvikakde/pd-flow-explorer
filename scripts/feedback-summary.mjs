@@ -41,7 +41,7 @@ const short = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s).replace(/
 console.log(`\nMost recent ${Math.min(limit, entries.length)}:\n`);
 for (const e of entries.slice(-limit).reverse()) {
   const when = new Date(e.timestamp).toLocaleString();
-  console.log(`• [${e.skill}] ${e.reason.toUpperCase()}${e.mode === "mock" ? " (mock)" : ""}  ${when}`);
+  console.log(`• ${e.id ?? "(no id)"} [${e.skill}] ${e.reason.toUpperCase()}${e.mode === "mock" ? " (mock)" : ""}  ${when}`);
   console.log(`  Q: ${short(e.question, 110)}`);
   if (e.note) console.log(`  Note: ${short(e.note, 110)}`);
   console.log(`  A: ${short(e.answer, 110)}\n`);

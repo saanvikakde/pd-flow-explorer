@@ -5,6 +5,11 @@
 
 # --- Local feedback log (personal data, stays on this machine) ---
 feedback/log.jsonl
+feedback/log.jsonl.bak
+# feedback/index.jsonl (ids, timestamps, skills, reasons only) IS committed: CI checks skill citations against it.
+
+# --- Python caches (scripts/check_skills.py) ---
+__pycache__/
 
 # --- Skill writer drafts and backups (apply a draft to make it SKILL.md) ---
 skills/**/SKILL.draft.md

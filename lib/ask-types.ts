@@ -54,6 +54,8 @@ export interface FeedbackRequest {
 
 /** One line of feedback/log.jsonl. */
 export interface FeedbackEntry extends FeedbackRequest {
+  /** Stable id that skill files cite, e.g. "FB-012". Assigned by appendFeedback. */
+  id: string;
   /** When the feedback was logged (ISO time). */
   timestamp: string;
   /** Frontmatter name of the skill at the time, if it differs from the folder. */

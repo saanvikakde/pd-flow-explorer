@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     return reply({ ok: false, message: "Missing or invalid feedback fields." }, 400);
   }
 
-  const entry: FeedbackEntry = {
+  const entry: Omit<FeedbackEntry, "id"> = {
     timestamp: new Date().toISOString(),
     skill,
     ...(typeof p.skillName === "string" && p.skillName !== skill ? { skillName: p.skillName.slice(0, 200) } : {}),
