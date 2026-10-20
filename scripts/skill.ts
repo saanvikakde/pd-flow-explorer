@@ -172,6 +172,7 @@ async function revise(id: string) {
   console.log(`  ${words} words (was ${countWords(fs.readFileSync(current, "utf8"))})`);
   if (changes) console.log(`\nWhat changed:\n${changes}\n`);
   console.log(`  Compare: code --diff ${current} ${draftPath(id)}`);
+  console.log(`  Check:   python3 scripts/check_skills.py ${draftPath(id)}`);
   console.log(`  Then:    npm run skill -- apply ${id}\n`);
 }
 
@@ -305,6 +306,7 @@ function readTopics(id: string): { title?: string; body: string } | null {
 }
 
 interface FeedbackLine {
+  id?: string;
   skill: string;
   reason: string;
   note?: string;
@@ -331,7 +333,7 @@ function readFeedback(): FeedbackLine[] {
 function formatFeedback(f: FeedbackLine, i: number) {
   const answer = f.answer.length > 1500 ? f.answer.slice(0, 1500) + " […]" : f.answer;
   return [
-    `--- Feedback ${i + 1}: marked ${f.reason.toUpperCase()} (${f.timestamp.slice(0, 10)}) ---`,
+    `--- Feedback ${f.id ?? i + 1}: marked ${f.reason.toUpperCase()} (${f.timestamp.slice(0, 10)}) ---`,
     f.note ? `Student note: ${f.note}` : "Student note: (none)",
     `Question: ${f.question}`,
     `Answer given:\n${answer}`,
